@@ -147,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
               style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
             ),
             Center(
-              child: _image == null ? const Padding(padding: EdgeInsets.all(12), child: Text("Select an Image", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),)): Image.file(_image!, height: 300, width: 300,) ,
+              child: _image == null ? const Padding(padding: EdgeInsets.all(12), child: Text("Select an Image", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),)): Image.file(File(_image!.path), height: 300, width: 300,) ,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
