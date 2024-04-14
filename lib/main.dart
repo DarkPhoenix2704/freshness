@@ -161,7 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Padding(padding: const EdgeInsets.all(12.0), child: Center(
-                  child: _recognitions != null ? TextButton(onPressed: calculateFreshness, child: const Text("Calculate Freshness"),): Text('The Freshness is '),
+                  child: _recognitions != null ? TextButton(onPressed: calculateFreshness, child: const Text("Calculate Freshness"),): Text(''),
                 ),)
               ],
             ),
