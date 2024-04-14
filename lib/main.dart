@@ -42,30 +42,28 @@ class _MyHomePageState extends State<MyHomePage> {
   final imagepicker = ImagePicker();
   XFile? _image;
 
-  dynamic staleFresh;
-
   List<dynamic>? _recognitions;
+  List<dynamic>? _freshness_recognition;
 
   Future loadModel(String? model) async {
     Tflite.close();
 
-    switch (model) {
-      case 'stale/fresh':
-        await Tflite.loadModel(
-            model: "assets/fresh_stale.tflite",
-            labels: "freshness_class.txt"
-        );
-      default:
-        await Tflite.loadModel(
-            model: "assets/vegetable_classification.tflite",
-            labels: "assets/classification.txt"
-        );
+    if(model == 'stale/fresh') {
+      await Tflite.loadModel(
+          model: "assets/fresh_stale.tflite",
+          labels: "assets/freshness_class.txt"
+      );
+    } else  {
+      await Tflite.loadModel(
+          model: "assets/vegetable_classification.tflite",
+          labels: "assets/classification.txt"
+      );
     }
-
   }
 
 
   Future recognizeImage(XFile image) async {
+    await loadModel('');
     var recognitions = await Tflite.runModelOnImage(
       path: image.path,
       numResults: 1,
@@ -93,11 +91,13 @@ class _MyHomePageState extends State<MyHomePage> {
     var staleFresh = await Tflite.runModelOnImage(
       path: _image!.path,
       numResults: 1,
+      threshold: 0.5,
     );
 
-    if (kDebugMode) {
-      print(staleFresh);
-    }
+    setState(() {
+      _freshness_recognition = staleFresh!;
+    });
+
   }
 
 
@@ -115,6 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _image = null;
       _recognitions = null;
+      _freshness_recognition = null;
     });
   }
 
@@ -147,7 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
               style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
             ),
             Center(
-              child: _image == null ? const Padding(padding: EdgeInsets.all(12), child: Text("Select an Image", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),)): Image.file(_image!, height: 300, width: 300,) ,
+              child: _image == null ? const Padding(padding: EdgeInsets.all(12), child: Text("Select an Image", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),)): Image.file(File(_image!.path), height: 300, width: 300,) ,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -162,6 +163,14 @@ class _MyHomePageState extends State<MyHomePage> {
               children: <Widget>[
                 Padding(padding: const EdgeInsets.all(12.0), child: Center(
                   child: _recognitions != null ?TextButton(onPressed: calculateFreshness, child: const Text("Calculate Freshness"),): const Text(""),
+                ),)
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(padding: const EdgeInsets.all(12.0), child: Center(
+                  child: _freshness_recognition != null ? Text('This is ${_freshness_recognition?[0].toString().split('label:')[1].split('}')[0]}'): const Text(""),
                 ),)
               ],
             ),
