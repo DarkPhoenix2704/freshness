@@ -56,7 +56,9 @@ dev_dependencies:
 flutter:
   assets:
     - assets/fresh_stale.tflite
+    - assets/fresh_stale01.tflite
     - assets/vegetable_classification.tflite
+    - assets/vegetable_classification01.tflite
     - assets/classification.txt
     - assets/freshness_class.txt
 

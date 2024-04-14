@@ -42,30 +42,29 @@ class _MyHomePageState extends State<MyHomePage> {
   final imagepicker = ImagePicker();
   XFile? _image;
 
-  dynamic staleFresh;
+  List<dynamic>? _freshness;
 
   List<dynamic>? _recognitions;
 
   Future loadModel(String? model) async {
     Tflite.close();
 
-    switch (model) {
-      case 'stale/fresh':
-        await Tflite.loadModel(
-            model: "assets/fresh_stale.tflite",
-            labels: "freshness_class.txt"
-        );
-      default:
-        await Tflite.loadModel(
-            model: "assets/vegetable_classification.tflite",
-            labels: "assets/classification.txt"
-        );
+    if(model ==  'stale/fresh') {
+      await Tflite.loadModel(
+          model: "assets/fresh_stale01.tflite",
+          labels: "assets/freshness_class.txt"
+      );
+    } else {
+      await Tflite.loadModel(
+          model: "assets/vegetable_classification01.tflite",
+          labels: "assets/classification.txt"
+      );
     }
-
   }
 
 
   Future recognizeImage(XFile image) async {
+    await loadModel('');
     var recognitions = await Tflite.runModelOnImage(
       path: image.path,
       numResults: 1,
@@ -95,9 +94,9 @@ class _MyHomePageState extends State<MyHomePage> {
       numResults: 1,
     );
 
-    if (kDebugMode) {
-      print(staleFresh);
-    }
+    setState(() {
+      _freshness = staleFresh;
+    });
   }
 
 
@@ -115,6 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _image = null;
       _recognitions = null;
+      _freshness = null;
     });
   }
 
@@ -161,7 +161,15 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Padding(padding: const EdgeInsets.all(12.0), child: Center(
-                  child: _recognitions != null ?TextButton(onPressed: calculateFreshness, child: const Text("Calculate Freshness"),): const Text(""),
+                  child: _recognitions != null ? TextButton(onPressed: calculateFreshness, child: const Text("Calculate Freshness"),): Text('The Freshness is '),
+                ),)
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(padding: const EdgeInsets.all(12.0), child: Center(
+                  child: _freshness != null ? Text('This is ${_freshness?[0].toString().split('label:')[1].split('}')[0]}'): const Text(""),
                 ),)
               ],
             ),

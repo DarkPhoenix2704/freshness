@@ -1,9 +1,36 @@
 apple
 banana
-bittergroud
+beetroot
+bell pepper
+cabbage
 capsicum
+carrot
+cauliflower
+chilli pepper
+corn
 cucumber
-okra
-oranges
+eggplant
+garlic
+ginger
+grapes
+jalepeno
+kiwi
+lemon
+lettuce
+mango
+onion
+orange
+paprika
+pear
+peas
+pineapple
+pomegranate
 potato
+raddish
+soybeans
+spinach
+sweetcorn
+sweet potato
 tomato
+turnip
+watermelon
